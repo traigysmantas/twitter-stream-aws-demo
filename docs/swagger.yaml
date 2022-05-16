@@ -86,7 +86,7 @@ paths:
       tags:
       - "tweets"
       operationId: get Tweets
-      summary: Start Stream 
+      summary: Get tweets from dynamoDb
       parameters:
         - in: query
           name: keyword
@@ -143,6 +143,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/genericError'
+  /tweetsStatistics:
+      get:
+        tags:
+        - "tweets"
+        operationId: get Tweets Statistics
+        summary: Get Tweets Statistics
+        parameters:
+          - in: query
+            name: startTime
+            schema:
+              type: string
+            description: start date (ISO format) for expected date range
+            required: true
+          - in: query
+            name: endTime
+            schema:
+              type: string
+            description: end date (ISO format) for expected date range
+            required: true
+          - in: query
+            name: countryCode
+            schema:
+              type: string
+            description: Country code of tweets country origin. if provided with none, returns tweetCount of tweets without country
+            required: true
+        responses:
+          '200':
+            description: Retrieved tweets results
+            content:
+              application/json:
+                schema:
+                    properties:
+                      tweetsCount:
+                        type: number
+                    required:
+                      - tweetsCount
+          '400':
+            description: Missing one of required query parameters or parameter value is incorrect.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/genericError'
+          '500':
+            description: Unexpected error occured.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/genericError'
 components:
   schemas:
     startStreamInput:
@@ -156,4 +204,6 @@ components:
       properties:
         message:
           type: string
+      required:
+        - message
 
