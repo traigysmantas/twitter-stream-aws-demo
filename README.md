@@ -4,11 +4,13 @@ The purpose of this project was to create a AWS Cloud based serverless solution 
 
 Twitter tweets are retrieved using [Real-time Filtered Stream API](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference). All tweets are pushed to SQS Queue and and consumed by Lambda using Event Source Mapping.
 Lambda Consumer store incoming tweets into DynamoDB and CloudWatch (create custom metrics by keyword and country).
+Solution architecture diagram is provided [here](docs/architecture.jpg)
 
-Solution exposes 3 endpoints:
+Solution exposes 4 endpoints:
 - POST /stream - to start stream with defined keyword.
 - DELETE /stream - stop running stream.
 - GET /tweets - retrieve already collected tweets.
+- GET /tweetsStatistics - retrieve count of tweets by country.
 
 Swagger documentation of each endpoint is added [here](docs/swagger.yaml)
 
@@ -16,7 +18,7 @@ Swagger documentation of each endpoint is added [here](docs/swagger.yaml)
 
 AWS Services used:
 - API Gateway
-  - 3 endpoints defined above.
+  - 4 endpoints defined above.
 - SQS queues:
   - StreamCloseQueue - inform running ProducerFunction Lambda to stop running Stream.
   - TweetsFifoQueue - FIFO queue to push tweets from Twitter Stream API. 
@@ -30,8 +32,9 @@ AWS Services used:
   - StartStreamFunction - check if Stream is not running in DynamoDB and invokeProducerFunction
   - StopStreamFunction - check if Stream is running in DynamoDB and push SQS message to StreamCloseQueue to close stream.
   - GetTweetsFunction - retrieve tweets by keyword from DynamoDB table.
+  - GetTweetsStatisticsFunction - retrieve tweets by countr code from CloudWatch Metrics.
 - CloudWatch
-  - Two custom metrics are added to query tweets info by country/keyword. 
+  - Three custom metrics are added to query tweets info by country/keyword. 
  ## Limitations
 
  Project has several limitations:
@@ -52,7 +55,6 @@ AWS Services used:
 - Add Swagger docs.
 - Investigate & add API Gateway Lambda authorizers.
 - Refactor SQS & DynamoDB integration parts to use Generics.
-- Investigate how to retrieve Tweets Statistics via API.
 - Investigate Fargate Service and use it instead of Producer Lambda.
 - Investigate DLQ solution to ensure data is stored correctly between DynamoDB & CloudWatch.
 
