@@ -10,6 +10,7 @@ Solution exposes 3 endpoints:
 - DELETE /stream - stop running stream.
 - GET /tweets - retrieve already collected tweets.
 
+Swagger documentation of each endpoint is added [here](docs/swagger.yaml)
 
 ## Resources
 
@@ -19,6 +20,7 @@ AWS Services used:
 - SQS queues:
   - StreamCloseQueue - inform running ProducerFunction Lambda to stop running Stream.
   - TweetsFifoQueue - FIFO queue to push tweets from Twitter Stream API. 
+  - TweetsDeadLetterQueue - FIFO queue used to get failed to process messages from TweetsFifoQueue.
 - DynamoDB tables:
   - StreamStatusTable - Stream status data.
   - TweetsTable - table used to store tweets. Indexed by tweetId + createDate and keyword + createDate.

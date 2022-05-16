@@ -1,0 +1,159 @@
+openapi: 3.0.1
+info:
+  title: Twitter Stream Demo
+  version: 1.0.0
+  description: >-
+    Stream has two methods to start and stop stream. 
+    Tweets endpoint returns relevant tweets from dynamoDB. 
+
+servers:
+  - url: SomeGeneratedURL
+tags:
+- name: "stream"
+  description: "Stream methods"
+
+- name: "tweets"
+  description: "Tweets methods"
+
+paths:
+  /stream:
+    post:
+      tags:
+      - "stream"
+      operationId: start stream
+      summary: Start Stream 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/startStreamInput'
+      responses:
+        '200':
+          description: Start Stream
+          content:
+            application/json:
+              schema:
+                  properties:
+                    message:
+                      type: string
+        '400':
+          description: Invalid input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'
+        '409':
+          description: Stream is already running. Call DELETE /stream to stop it.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'
+        '500':
+          description: Unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'
+    delete:
+      tags:
+      - "stream"
+      operationId: stop stream
+      summary: Stop running Stream 
+      responses:
+        '200':
+          description: Stream was stopped successfuly.
+          content:
+            application/json:
+              schema:
+                  properties:
+                    message:
+                      type: string
+        '409':
+          description: Stream is not running. Call POST /stream to start it.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'
+        '500':
+          description: Unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'
+  /tweets:
+    get:
+      tags:
+      - "tweets"
+      operationId: get Tweets
+      summary: Start Stream 
+      parameters:
+        - in: query
+          name: keyword
+          schema:
+            type: string
+          description: keyword used to start stream
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: paginationKey
+          schema:
+            type: integer
+          description: Key to provide from previous response if not more data is available to return.
+      responses:
+        '200':
+          description: Retrieved tweets results
+          content:
+            application/json:
+              schema:
+                  properties:
+                    paginationKey:
+                      type: string
+                    tweets:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          tweetId:
+                            type: string
+                          createdAt:
+                            type: string
+                          text:
+                            type: string
+                          keyword:
+                            type: string
+                          country:
+                            type: string
+                          countryCode:
+                            type: string
+                  required:
+                    - tweets
+        '400':
+          description: Either keyword or limit query string must be provided to limit search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'
+        '500':
+          description: Unexpected error occured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericError'
+components:
+  schemas:
+    startStreamInput:
+      properties:
+        keyword:
+          type: string
+          description: keyword to query twitter.
+      required:
+        - keyword
+    genericError:
+      properties:
+        message:
+          type: string
+
