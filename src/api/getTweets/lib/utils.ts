@@ -1,0 +1,1 @@
+export const encodeToBase64 = (obj: any) => Buffer.from(JSON.stringify(obj)).toString('base64url');

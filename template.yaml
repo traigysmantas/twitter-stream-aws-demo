@@ -1,0 +1,221 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  TwitterStreamDemo
+
+  Sample SAM Template for Twitter Stream Demo
+
+Globals:
+  Function:
+    Runtime: nodejs14.x
+
+Parameters:
+  StatusTableName:
+    Type: String
+    Default: stream-status-table
+  TweetsTableName:
+    Type: String
+    Default: tweets-table
+  TweetsTableIndex:
+    Type: String
+    Default: Keyword-index
+  TwitterBearerToken:
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: Twitter Bearer Token value saved in AWS SSM Parameter store
+    Default: /TWITTER_BEARER_TOKEN
+
+Resources:
+  # SQS 
+  StreamCloseQueue:
+    Type: AWS::SQS::Queue
+
+  TweetsFifoQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: True
+      ContentBasedDeduplication: True
+      RedrivePolicy:
+        deadLetterTargetArn:  !GetAtt TweetsDeadLetterQueue.Arn
+        maxReceiveCount: 1
+  
+  TweetsDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: True
+      ContentBasedDeduplication: True
+
+  # Dynamo DB Table
+  StreamStatusTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey: 
+        Name: streamId
+        Type: Number
+      TableName: !Ref StatusTableName
+      ProvisionedThroughput:
+        WriteCapacityUnits: 2
+        ReadCapacityUnits: 2
+
+  TweetsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Ref TweetsTableName
+      AttributeDefinitions:
+        - AttributeName: tweetId
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+        - AttributeName: keyword
+          AttributeType: S
+      KeySchema:
+        - AttributeName: tweetId
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: !Ref TweetsTableIndex
+          KeySchema:
+            - AttributeName: keyword
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+              ProjectionType: ALL
+      ProvisionedThroughput:
+        ReadCapacityUnits: 0
+        WriteCapacityUnits: 0
+
+  # Lambda Functions
+  ProducerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/webpackBundle/ProducerFn
+      Handler: index.produce
+      MemorySize: 256
+      Timeout: 210
+      Architectures:
+        - x86_64
+      Policies: 
+        - DynamoDBCrudPolicy:
+            TableName: !Ref StreamStatusTable
+        - SQSPollerPolicy:
+            QueueName: !GetAtt StreamCloseQueue.QueueName
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt TweetsFifoQueue.QueueName
+      Environment:
+        Variables:
+          STATUS_TABLE_NAME: !Ref StatusTableName
+          STREAM_CLOSE_QUEUE_URL: !Ref StreamCloseQueue
+          TWEETS_QUEUE_URL: !Ref TweetsFifoQueue
+          TWITTER_BEARER_TOKEN: !Ref TwitterBearerToken
+
+  ConsumerFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: dist/webpackBundle/ConsumerFn
+      Handler: index.consume
+      MemorySize: 256
+      Timeout: 30 # Must be less or equal thant SQS visibility timeout.
+      Architectures:
+        - x86_64
+      Events:
+        ConsumeTweetEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TweetsFifoQueue.Arn
+            BatchSize: 10
+      Policies:
+        - SQSPollerPolicy:
+            QueueName: !GetAtt TweetsFifoQueue.QueueName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+        - CloudWatchPutMetricPolicy: {}
+      Environment:
+        Variables:
+          TWEETS_TABLE_NAME: !Ref TweetsTableName
+
+  StartStreamFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/webpackBundle/StartStreamFn
+      Handler: index.handler
+      MemorySize: 128
+      Timeout: 10
+      Architectures:
+        - x86_64
+      Events:
+        StartStream:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /stream
+            Method: post
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref StreamStatusTable
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ProducerFunction
+      Environment:
+        Variables:
+          PRODUCER_FUNCTION: !Ref ProducerFunction
+          STATUS_TABLE_NAME: !Ref StatusTableName
+          
+  StopStreamFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/webpackBundle/StopStreamFn
+      Handler: index.handler
+      MemorySize: 128
+      Timeout: 10
+      Architectures:
+        - x86_64
+      Events:
+        StopStream:
+          Type: Api
+          Properties:
+            Path: /stream
+            Method: delete
+      Policies:
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt StreamCloseQueue.QueueName
+        - DynamoDBCrudPolicy:
+            TableName: !Ref StreamStatusTable
+      Environment:
+        Variables:
+          STATUS_TABLE_NAME: !Ref StatusTableName
+          STREAM_CLOSE_QUEUE_URL: !Ref StreamCloseQueue
+
+  GetTweetsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/webpackBundle/GetTweetsFn
+      Handler: index.handler
+      MemorySize: 128
+      Timeout: 10
+      Architectures:
+        - x86_64
+      Events:
+        StopStream:
+          Type: Api
+          Properties:
+            Path: /tweets
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TweetsTable
+      Environment:
+        Variables:
+          TWEETS_TABLE_NAME: !Ref TweetsTableName
+          TWEETS_TABLE_INDEX: !Ref TweetsTableIndex
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  StreamApi:
+      Description: 'API Gateway endpoint URL for Prod stage for Hello function'
+      Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+  StartStreamFunction:
+    Description: "Start stream Lambda Function ARN"
+    Value: !GetAtt StartStreamFunction.Arn

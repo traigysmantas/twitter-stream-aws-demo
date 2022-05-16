@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "esModuleInterop": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "lib": ["ES2021.String", "dom"],
+    "paths": {
+      "*": ["node_modules/*"],
+      "common/*": ["src/common/*"],
+    }
+  },
+  "include": ["src/**/*"]
+}
