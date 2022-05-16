@@ -8,13 +8,13 @@ export const getQueryParams = (
 ): StatisticsQueryParams => {
   const start = event?.queryStringParameters?.startTime;
   const end = event?.queryStringParameters?.endTime;
-  const countryCode = event?.queryStringParameters?.countryCode;
+  const _countryCode = event?.queryStringParameters?.countryCode;
 
-  console.log('Incoming params', { start, end, countryCode });
+  console.log('Incoming params', { start, end, _countryCode });
 
   if (!start) throw new LambdaHttpError(400, 'Please provide startTime');
   if (!end) throw new LambdaHttpError(400, 'Please provide endTime');
-  if (!countryCode)
+  if (!_countryCode)
     throw new LambdaHttpError(400, 'Please provide countryCode');
 
   const startTime = getDate(
@@ -22,6 +22,8 @@ export const getQueryParams = (
     'startTime cannot be converted to ISO string'
   );
   const endTime = getDate(end, 'endTime cannot be converted to ISO string');
+
+  const countryCode = validateCountryCode(_countryCode);
 
   return {
     startTime,
@@ -38,3 +40,11 @@ const getDate = (date: string, errMessage: string) => {
     throw new LambdaHttpError(400, errMessage);
   }
 };
+
+const validateCountryCode = (countryCode: string): string => {
+  if (countryCode.toUpperCase() === 'NONE' || countryCode.length === 2) {
+    return countryCode; 
+  }
+
+  throw new LambdaHttpError(400, 'Provided countryCode is incorrect');
+}
