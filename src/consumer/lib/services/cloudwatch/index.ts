@@ -1,14 +1,14 @@
 import { Tweet } from 'common/interfaces/Tweet.inferface'
 
-export const insertMetrics = (cloudwatch: AWS.CloudWatch, tweet: Tweet) => {
+export const insertMetrics = (cloudwatch: AWS.CloudWatch, namespace: string, tweet: Tweet) => {
   return cloudwatch.putMetricData({
     MetricData: [
       {
         MetricName: 'TweetsByCountry',
         Dimensions: [
           {
-            Name: 'country',
-            Value: tweet.country
+            Name: 'countryCode',
+            Value: tweet.countryCode,
           }
         ],
         Timestamp: new Date(tweet.createdAt),
@@ -43,8 +43,7 @@ export const insertMetrics = (cloudwatch: AWS.CloudWatch, tweet: Tweet) => {
         Unit: 'Count',
         Value: 1.0
       },
-      
     ],
-    Namespace: 'tweets-test-2',
+    Namespace: namespace,
   }).promise()
 }

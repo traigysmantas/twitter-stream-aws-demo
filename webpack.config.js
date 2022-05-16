@@ -7,6 +7,7 @@ module.exports = {
     ProducerFn: './src/producer/index.ts',
     ConsumerFn: './src/consumer/index.ts',
     GetTweetsFn: './src/api/getTweets/index.ts',
+    GetTweetsStatisticsFn: './src/api/getTweetsStatistics/index.ts'
   },
   devtool: 'source-map',
   output: {

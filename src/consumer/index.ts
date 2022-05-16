@@ -8,6 +8,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 const cloudwatch = new AWS.CloudWatch();
 
 const TWEETS_TABLE = process.env.TWEETS_TABLE_NAME;
+const CW_NAMESPACE = process.env.CW_NAMESPACE || 'tweetsFinal';
 
 export const consume: SQSHandler = async (event) => {
 
@@ -26,7 +27,7 @@ export const consume: SQSHandler = async (event) => {
     })
 
     // TODO: Refactor to insert metrics in batches.
-    await insertMetrics(cloudwatch, tweet)
+    await insertMetrics(cloudwatch, CW_NAMESPACE, tweet)
     .then(() => console.log('[Consumer][SUCCESS][CloudWatch] Tweet Metrics added succesfully'))
   } 
 

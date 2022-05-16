@@ -18,7 +18,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('[GetTweets] transformed QueryParams: ', queryParams);
 
     if (!queryParams.keyword && !queryParams.limit) {
-      throw new LambdaHttpError(400, 'Provided either keyword or limit parameter!');
+      throw new LambdaHttpError(400, 'Either keyword or limit query string must be provided to limit search results');
     }
 
     const tweetsResponse = await getTweetsFromTable(dynamodb, TWEETS_TABLE, TWEETS_TABLE_INDEX, queryParams);
