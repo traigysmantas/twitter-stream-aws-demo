@@ -12,7 +12,7 @@ Solution exposes 4 endpoints:
 - GET /tweets - retrieve already collected tweets.
 - GET /tweetsStatistics - retrieve count of tweets by country.
 
-Swagger documentation of each endpoint is added [here](docs/swagger.yaml)
+Swagger documentation of each endpoint is added [here](docs/openapi.yaml)
 
 ## Resources
 
