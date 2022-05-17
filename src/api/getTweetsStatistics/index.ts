@@ -1,11 +1,9 @@
 import AWS from 'aws-sdk';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { handleError } from 'common/utils/http/error/handleError';
-import { formatSuccessfulResponse } from 'common/utils/http/response/handlers';
+import { handleError, formatSuccessfulResponse, LambdaHttpError } from 'common/utils/http';
 
 import { getQueryParams } from './lib/getQueryParams';
 import { getDimensions } from './lib/getDimensions';
-import { LambdaHttpError } from 'common/utils/http/error/LambdaHttpError';
 
 const cloudwatch = new AWS.CloudWatch();
 const CW_NAMESPACE = process.env.CW_NAMESPACE || 'tweetsFinal';

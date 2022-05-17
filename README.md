@@ -52,10 +52,9 @@ AWS Services used:
 | **Create Fargate Task to run long stream proccess**               | **At first sight, hard to setup. AWS does not have free tier**|
 ## Possible Improvements
 
-- Add Joi Schema validation for API Lambdas.
+- Investigate & add API Gateway request validation.
 - Investigate & add API Gateway Lambda authorizers.
 - Refactor DynamoDB integration part to use Generics.
-- Refactor common folder to improve imports statements.
 - Investigate Fargate Service and use it instead of Producer Lambda.
 - Investigate DLQ solution to ensure data is stored correctly between DynamoDB & CloudWatch.
 

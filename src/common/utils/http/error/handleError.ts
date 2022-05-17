@@ -1,5 +1,5 @@
 import { LambdaHttpError } from './LambdaHttpError';
-import { formatFailedResponse } from '../response/handlers';
+import { formatFailedResponse } from '../response/formatFailedResponse';
 
 export const handleError = (err: LambdaHttpError | Error): any => {
   if (err instanceof LambdaHttpError) {

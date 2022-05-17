@@ -1,11 +1,8 @@
 import AWS from 'aws-sdk';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { handleError } from 'common/utils/http/error/handleError';
-import { LambdaHttpError } from 'common/utils/http/error/LambdaHttpError';
-import { formatSuccessfulResponse } from 'common/utils/http/response/handlers';
+import { handleError, LambdaHttpError, formatSuccessfulResponse } from 'common/utils/http';
+import { isStreamRunning } from 'common/utils';
 import { updateStreamStatus, getStreamStatus } from 'common/services/dynamoDB/streams';
-
-import { isStreamRunning } from 'common/utils/isStreamRunning';
 
 import { invokeProducerLambda } from './lib/utils';
 
