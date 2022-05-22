@@ -14,10 +14,7 @@ const lambdaClient = new AWS.Lambda();
 
 export const handler: APIGatewayProxyHandler = async ({ body }) => {
   try {
-
-    const startStreamInput = JSON.parse(body) as StartStreamInput
-
-    validateInput(StartStreamSchema, startStreamInput);
+    const validatedInput = validateInput(StartStreamSchema, JSON.parse(body));
 
     const streamItem = await getStreamStatus(dynamodb);
     console.log('streamItem: ', streamItem);
@@ -27,7 +24,7 @@ export const handler: APIGatewayProxyHandler = async ({ body }) => {
     }
 
     console.log('Starting new Stream.');
-    invokeProducerLambda(lambdaClient, startStreamInput.keyword);
+    invokeProducerLambda(lambdaClient, validatedInput.keyword);
     await updateStreamStatus(dynamodb, 'ON');
 
     return formatSuccessfulResponse({ message: 'Stream was started succesfully' });
