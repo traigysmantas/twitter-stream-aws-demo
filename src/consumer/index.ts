@@ -1,6 +1,7 @@
 import { SQSHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Tweet } from 'common/interfaces/Tweet.inferface';
+
 import { insertMetrics } from './lib/services/cloudwatch';
 import { insertTweets } from './lib/services/dynamodb';
 
@@ -29,7 +30,7 @@ export const consume: SQSHandler = async (event) => {
     // TODO: Refactor to insert metrics in batches.
     await insertMetrics(cloudwatch, CW_NAMESPACE, tweet)
     .then(() => console.log('[Consumer][SUCCESS][CloudWatch] Tweet Metrics added succesfully'))
-  } 
+  }
 
   await insertTweets(dynamodb, TWEETS_TABLE, dynamoDbItems)
   .then(() => console.log('[Consumer][SUCCESS] Tweet(s) added succesfully'))

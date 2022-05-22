@@ -1,9 +1,9 @@
 import AWS from 'aws-sdk';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { handleError, LambdaHttpError, formatSuccessfulResponse } from 'common/utils/http';
+import { formatSuccessfulResponse, handleError, LambdaHttpError } from 'common/utils/http';
 import { isStreamRunning } from 'common/utils';
 import { validateInput } from 'common/utils/validation';
-import { updateStreamStatus, getStreamStatus } from 'common/services/dynamoDB/streams';
+import { getStreamStatus, updateStreamStatus } from 'common/services/dynamoDB/streams';
 
 import { invokeProducerLambda } from './lib/invokeProducerLambda';
 import StartStreamSchema from './schemas/StartStream.schema';
@@ -17,7 +17,7 @@ export const handler: APIGatewayProxyHandler = async ({ body }) => {
 
     const streamItem = await getStreamStatus(dynamodb);
     console.log('streamItem: ', streamItem);
-    
+
     if (isStreamRunning(streamItem)) {
       throw new LambdaHttpError(409, 'Stop running stream!');
     }

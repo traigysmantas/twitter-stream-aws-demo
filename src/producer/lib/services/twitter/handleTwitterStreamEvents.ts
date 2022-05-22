@@ -6,17 +6,19 @@ import { transformTweet } from '../../transformTweet';
 export const handleTwitterStreamEvents = (stream: TweetStream, dynamodb: AWS.DynamoDB.DocumentClient, sqs: AWS.SQS, keyword: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     let count = 0;
-    
+
     stream
     .on(ETwitterStreamEvent.Connected, () => console.log('Stream Connected!'))
     .on(ETwitterStreamEvent.ConnectionClosed, async () => {
       console.log('Closing Twitter Stream Connection.');
       await updateStreamStatus(dynamodb, 'OFF');
+
       return resolve;
     })
     .on(ETwitterStreamEvent.Error, async (err) => {
       console.log('[STREAM][ERROR] Twitter stream error', err);
       await updateStreamStatus(dynamodb, 'OFF');
+
       return resolve;
     })
     .on(
@@ -24,7 +26,7 @@ export const handleTwitterStreamEvents = (stream: TweetStream, dynamodb: AWS.Dyn
       async (eventData: TweetV2SingleStreamResult) => {
         count++;
         console.log('Got tweet. Current tweet count:', {
-          count: count,
+          count,
           tweetId: eventData.data.id,
         });
 

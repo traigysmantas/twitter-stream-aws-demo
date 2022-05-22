@@ -1,7 +1,7 @@
 import { ReceiveMessageResult } from 'aws-sdk/clients/sqs';
 
 export const handleReceivedMessages = async (sqs:AWS.SQS , messages: ReceiveMessageResult): Promise<void> => {
-  let deleteParams = [];
+  const deleteParams = [];
     messages.Messages.forEach(msg => {
       console.log('message Found:', { msg });
       deleteParams.push({
@@ -13,5 +13,5 @@ export const handleReceivedMessages = async (sqs:AWS.SQS , messages: ReceiveMess
     await sqs.deleteMessageBatch({
       QueueUrl: process.env.STREAM_CLOSE_QUEUE_URL,
       Entries: deleteParams,
-    }).promise();    
+    }).promise();
 }

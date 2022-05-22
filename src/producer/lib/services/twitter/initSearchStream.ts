@@ -7,5 +7,6 @@ export const initSearchStream = async (twitterClient: TwitterApi) => {
     expansions: ['geo.place_id'],
     autoConnect: false,
   });
+
   return stream;
 };

@@ -2,6 +2,7 @@ import { Context } from 'aws-lambda';
 import { TweetStream } from 'twitter-api-v2';
 
 import { isTriggerExitRequired } from '../../utils';
+
 import { handleReceivedMessages } from './handleReceivedMessages';
 import { longPollSQSMessage } from './longPollSQSMessage';
 
@@ -17,14 +18,16 @@ export const pollSqsMessages = async (stream: TweetStream, sqs: AWS.SQS, context
       await handleReceivedMessages(sqs, messages);
       console.log('[SQS Polling][Message Received & Handled] Closing Stream.');
       stream.close();
+
       return;
-    } 
-    
+    }
+
     if (isTriggerExitRequired(context, TIMEOUT_TIME)) {
       console.log('[SQS Polling] No close event received. Closing Stream gracefully.')
       stream.close()
+
       return;
-    } 
+    }
 
     console.log('[SQS Polling] No messages received. Polling Again');
     pollSqsMessages(stream, sqs, context);

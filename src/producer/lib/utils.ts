@@ -5,5 +5,6 @@ import { Context } from 'aws-lambda';
  */
  export const isTriggerExitRequired = (context: Context, timeInMs: number): boolean => {
   const remainingTime = context.getRemainingTimeInMillis();
+
   return (remainingTime - timeInMs) < 0
 }

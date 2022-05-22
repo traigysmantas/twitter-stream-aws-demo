@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { handleError, formatSuccessfulResponse, LambdaHttpError } from 'common/utils/http';
+import { formatSuccessfulResponse, handleError, LambdaHttpError } from 'common/utils/http';
 import { validateInput } from 'common/utils/validation';
 
 import { getDimensions } from './lib/getDimensions';
@@ -12,7 +12,7 @@ const CW_COUNTRY_METRIC = process.env.CW_COUNTRY_METRIC || 'TweetsByCountry'
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
-    
+
     const { startTime, endTime, countryCode } = validateInput(GetTweetsStatistics, event.queryStringParameters);
 
     const dimensions = await getDimensions(countryCode);
@@ -23,19 +23,19 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       Dimensions: dimensions,
       StartTime: startTime,
       EndTime: endTime,
-      Statistics: [ "Sum" ],
+      Statistics: [ 'Sum' ],
       Period: 3600,
     }).promise();
 
     console.log('metrics retrieved: ', metrics);
 
     const tweetsCount =  metrics.Datapoints?.[0]?.Sum;
-    
+
     if (!tweetsCount) {
       throw new LambdaHttpError(404, `No tweets statistics found by country countryCode: ${countryCode}`);
     }
 
-    return formatSuccessfulResponse({ tweetsCount: tweetsCount });
+    return formatSuccessfulResponse({ tweetsCount });
   } catch (err) {
     return handleError(err);
   }

@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { handleError, formatSuccessfulResponse } from 'common/utils/http';
+import { formatSuccessfulResponse, handleError } from 'common/utils/http';
 import { validateInput } from 'common/utils/validation';
 
 import { getTweetsFromTable } from './lib/dynamoDB/getTweetsFromTable';

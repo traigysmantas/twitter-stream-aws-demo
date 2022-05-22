@@ -1,4 +1,5 @@
 import Joi from 'joi';
+
 import { GetTweetsQueryParams } from '../interfaces/GetTweetsQueryParams.interface';
 
 const GetTweetsSchema: Joi.ObjectSchema<GetTweetsQueryParams> = Joi.object({

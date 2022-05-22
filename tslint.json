@@ -1,0 +1,27 @@
+{
+  "defaultSeverity": "warning",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "any",
+        "named-imports-order": "case-insensitive",
+        "grouped-imports": true,
+        "module-source-path": "full"
+      }
+    ],
+    "no-string-literal": false,
+    "no-any": true,
+    "no-console": false,
+    "no-empty": true,
+    "no-unused-variable": true,
+    "newline-before-return": true,
+    "quotemark": [true, "single"]
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": ["node_modules/**"]
+  }
+}

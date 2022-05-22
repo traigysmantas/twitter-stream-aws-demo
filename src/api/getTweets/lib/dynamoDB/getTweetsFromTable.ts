@@ -13,7 +13,7 @@ export const getTweetsFromTable = (
   if (!keyword) {
     return dynamodb
       .scan({
-        TableName: TableName,
+        TableName,
         ...(limit && { Limit: limit }),
         ...(paginationKey && { ExclusiveStartKey: parseBase64ToDynamoDbKey(paginationKey) }),
       })
@@ -22,7 +22,7 @@ export const getTweetsFromTable = (
 
   return dynamodb
     .query({
-      TableName: TableName,
+      TableName,
       IndexName: tableIndex,
       ...(limit && { Limit: limit }),
       ...(paginationKey && { ExclusiveStartKey: parseBase64ToDynamoDbKey(paginationKey) }),
