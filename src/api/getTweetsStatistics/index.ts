@@ -1,9 +1,10 @@
 import AWS from 'aws-sdk';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { handleError, formatSuccessfulResponse, LambdaHttpError } from 'common/utils/http';
+import { validateInput } from 'common/utils/validation';
 
-import { getQueryParams } from './lib/getQueryParams';
 import { getDimensions } from './lib/getDimensions';
+import GetTweetsStatistics from './schemas/GetTweetsStatistics.schema';
 
 const cloudwatch = new AWS.CloudWatch();
 const CW_NAMESPACE = process.env.CW_NAMESPACE || 'tweetsFinal';
@@ -12,7 +13,7 @@ const CW_COUNTRY_METRIC = process.env.CW_COUNTRY_METRIC || 'TweetsByCountry'
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     
-    const { startTime, endTime, countryCode } = getQueryParams(event);
+    const { startTime, endTime, countryCode } = validateInput(GetTweetsStatistics, event.queryStringParameters);
 
     const dimensions = await getDimensions(countryCode);
 
