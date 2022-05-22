@@ -1,10 +1,7 @@
+import { JsonObject } from 'common/interfaces/JsonObject.interface';
 import Joi from 'joi';
 
 import { LambdaHttpError } from './http';
-
-interface JsonObject {
-  [key: string]: any;
-}
 
 export const validateInput = <T>(schema: Joi.ObjectSchema<T>, input: JsonObject) => {
   const { error, value } = schema.validate(input);

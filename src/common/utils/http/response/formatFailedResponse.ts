@@ -1,6 +1,8 @@
+import { HttpLambdaResponse } from 'common/interfaces/HttpLambdaResponse.interface';
+
 import { LambdaHttpError } from '../error/LambdaHttpError';
 
-export const formatFailedResponse = (error: LambdaHttpError | Error): any => {
+export const formatFailedResponse = (error: LambdaHttpError | Error): HttpLambdaResponse => {
   let statusCode = 500;
   let message = 'Unexpected error occured';
 
