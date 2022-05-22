@@ -15,6 +15,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     const { startTime, endTime, countryCode } = validateInput(GetTweetsStatistics, event.queryStringParameters);
 
+    console.log('Validated params: ', { startTime, endTime, countryCode });
+
     const dimensions = await getDimensions(countryCode);
 
     const metrics = await cloudwatch.getMetricStatistics({

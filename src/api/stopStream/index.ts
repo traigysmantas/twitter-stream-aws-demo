@@ -21,7 +21,7 @@ export const handler: APIGatewayProxyHandler = async () => {
     await sendCloseMessage(sqs);
 
     return formatSuccessfulResponse({
-      message: 'stream was stopped succesfuly',
+      message: 'stream was stopped succesfully',
     });``
 
   } catch (err) {
