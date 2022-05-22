@@ -1,4 +1,4 @@
-import { GetTweetsQueryParams } from '../../interfaces/GetTweetsQueryParams';
+import { GetTweetsQueryParams } from '../../interfaces/GetTweetsQueryParams.interface';
 import { parseBase64ToDynamoDbKey } from '../utils';
 
 // TODO: Refactor to reusable generic method.
