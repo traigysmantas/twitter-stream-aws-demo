@@ -5,9 +5,8 @@ import { isStreamRunning } from 'common/utils';
 import { validateInput } from 'common/utils/validation';
 import { updateStreamStatus, getStreamStatus } from 'common/services/dynamoDB/streams';
 
-import { invokeProducerLambda } from './lib/utils';
+import { invokeProducerLambda } from './lib/invokeProducerLambda';
 import StartStreamSchema from './schemas/StartStream.schema';
-import { StartStreamInput } from './interfaces/StartStreamInput.interface';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const lambdaClient = new AWS.Lambda();

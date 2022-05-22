@@ -1,9 +1,9 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { handleError, formatSuccessfulResponse, LambdaHttpError } from 'common/utils/http';
+import { handleError, formatSuccessfulResponse } from 'common/utils/http';
 import { validateInput } from 'common/utils/validation';
 
-import { getTweetsFromTable } from './lib/dynamoDB';
+import { getTweetsFromTable } from './lib/dynamoDB/getTweetsFromTable';
 import { encodeToBase64 } from './lib/utils';
 import GetTweetsSchema from './schemas/GetTweets.schema';
 
