@@ -1,4 +1,5 @@
 import { GetTweetsQueryParams } from '../../interfaces/GetTweetsQueryParams';
+import { parseBase64ToDynamoDbKey } from '../utils';
 
 // TODO: Refactor to reusable generic method.
 export const getTweetsFromTable = (
@@ -14,7 +15,7 @@ export const getTweetsFromTable = (
       .scan({
         TableName: TableName,
         ...(limit && { Limit: limit }),
-        ...(paginationKey && { ExclusiveStartKey: paginationKey }),
+        ...(paginationKey && { ExclusiveStartKey: parseBase64ToDynamoDbKey(paginationKey) }),
       })
       .promise();
   }
@@ -24,7 +25,7 @@ export const getTweetsFromTable = (
       TableName: TableName,
       IndexName: tableIndex,
       ...(limit && { Limit: limit }),
-      ...(paginationKey && { ExclusiveStartKey: paginationKey }),
+      ...(paginationKey && { ExclusiveStartKey: parseBase64ToDynamoDbKey(paginationKey) }),
       KeyConditionExpression: 'keyword = :keyword',
       ExpressionAttributeValues: {
         ':keyword': keyword,

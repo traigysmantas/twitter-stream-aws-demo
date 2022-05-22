@@ -5,11 +5,13 @@ interface JsonObject {
   [key: string]: any;
 }
 
-export const validateInput = (schema: Joi.ObjectSchema, input: JsonObject) => {
-  const { error } = schema.validate(input);
+export const validateInput = <T>(schema: Joi.ObjectSchema<T>, input: JsonObject) => {
+  const { error, value } = schema.validate(input);
 
   if (error) {
     console.error(`[Failure][Validation] Error: `, error);
     throw new LambdaHttpError(400, error.message);
   }
+
+  return value;
 };
