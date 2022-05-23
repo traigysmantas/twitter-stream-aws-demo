@@ -4,7 +4,7 @@ import Joi from 'joi';
 import { formatSuccessfulResponse, handleError } from './utils/http';
 import { validateInput } from './utils/validation';
 
-const lambdaHttpHandler = async <T>({ queryStringParameters, body }: APIGatewayProxyEvent, validationSchema: Joi.ObjectSchema<T>, services: any, fn: (params: T, services: any) => any) => {
+const lambdaHttpHandler = async <T>({ queryStringParameters, body }: APIGatewayProxyEvent, fn: (params: T, services?: any) => any, services?: any, validationSchema?: Joi.ObjectSchema<T>) => {
   try {
     const inputParams = {
       ...(queryStringParameters && { ...queryStringParameters }),
@@ -13,7 +13,7 @@ const lambdaHttpHandler = async <T>({ queryStringParameters, body }: APIGatewayP
     console.log('inputParams: ', inputParams);
 
     // TO DO: refactor to be more generic or introduce interface/function per LambdaFn to get inputParams.
-    const validatedParams = validateInput(validationSchema, inputParams);
+    const validatedParams = validationSchema ? validateInput(validationSchema, inputParams): inputParams;
 
     const result = await fn(validatedParams, services);
 

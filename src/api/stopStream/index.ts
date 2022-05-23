@@ -1,30 +1,12 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { getStreamStatus } from 'common/services/dynamoDB/streams';
-import { isStreamRunning } from 'common/utils';
-import { formatSuccessfulResponse, handleError, LambdaHttpError } from 'common/utils/http';
+import lambdaHttpHandler from 'common/lambdaHttpHandler';
 
-import { sendCloseMessage } from './lib/sendCloseMessage';
+import { stopStream } from './lib/stopStream';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const sqs = new AWS.SQS();
 
-export const handler: APIGatewayProxyHandler = async () => {
-  try {
-    const streamItem = await getStreamStatus(dynamodb);
-
-    if (!isStreamRunning(streamItem)) {
-      throw new LambdaHttpError(409, 'Stream is not running!');
-    }
-
-    // send Message to SQS to stop stream.
-    await sendCloseMessage(sqs);
-
-    return formatSuccessfulResponse({
-      message: 'stream was stopped succesfully',
-    });``
-
-  } catch (err) {
-    return handleError(err);
-  }
+export const handler: APIGatewayProxyHandler = async (event) => {
+  return lambdaHttpHandler(event, stopStream, { dynamodb, sqs });
 };

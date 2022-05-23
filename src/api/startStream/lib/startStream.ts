@@ -2,11 +2,13 @@ import { LambdaHttpError } from 'common/utils/http';
 import { isStreamRunning } from 'common/utils';
 import { getStreamStatus, updateStreamStatus } from 'common/services/dynamoDB/streams';
 
-import { invokeProducerLambda } from './invokeProducerLambda';
 import { StartStreamInput } from '../interfaces/StartStreamInput.interface';
+
+import { invokeProducerLambda } from './invokeProducerLambda';
 
 export const startStream = async (params: StartStreamInput, { dynamodb, lambdaClient }) => {
   console.log('startStream params: ', params);
+
   const streamItem = await getStreamStatus(dynamodb);
   console.log('streamItem: ', streamItem);
 
