@@ -1,4 +1,4 @@
-import { GetTweetsQueryParams } from '../../interfaces/GetTweetsQueryParams.interface';
+import { GetTweetsParams } from '../../interfaces/GetTweetsParams.interface';
 import { parseBase64ToDynamoDbKey } from '../utils';
 
 // TODO: Refactor to reusable generic method.
@@ -6,7 +6,7 @@ export const getTweetsFromTable = (
   dynamodb: AWS.DynamoDB.DocumentClient,
   TableName: string,
   tableIndex: string,
-  queryStringParameters: GetTweetsQueryParams
+  queryStringParameters: GetTweetsParams
 ) => {
   const { limit, paginationKey, keyword } = queryStringParameters;
 
