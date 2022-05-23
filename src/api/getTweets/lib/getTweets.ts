@@ -1,14 +1,11 @@
-import AWS from 'aws-sdk';
-
 import { GetTweetsParams } from '../interfaces/GetTweetsParams.interface';
 import { getTweetsFromTable } from './dynamoDB/getTweetsFromTable';
 import { encodeToBase64 } from './utils';
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
 const TWEETS_TABLE = process.env.TWEETS_TABLE_NAME;
 const TWEETS_TABLE_INDEX = process.env.TWEETS_TABLE_INDEX;
 
-export const getTweets = async (params: GetTweetsParams) => {
+export const getTweets = async (params: GetTweetsParams, { dynamodb }) => {
   console.log('[GetTweets] incoming Params: ', params);
 
   const { Items, LastEvaluatedKey } = await getTweetsFromTable(

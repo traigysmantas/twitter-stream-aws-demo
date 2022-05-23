@@ -1,14 +1,14 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import Joi from 'joi';
-import { formatSuccessfulResponse, handleError } from './utils/http';
 
+import { formatSuccessfulResponse, handleError } from './utils/http';
 import { validateInput } from './utils/validation';
 
 const lambdaHttpHandler = async <T>({ queryStringParameters, body }: APIGatewayProxyEvent, validationSchema: Joi.ObjectSchema<T>, services: any, fn: (params: T, services: any) => any) => {
   try {
     const inputParams = {
-      ...(queryStringParameters && { queryStringParameters }),
-      ...(body && { body })
+      ...(queryStringParameters && { ...queryStringParameters }),
+      ...(body && { ...JSON.parse(body) })
     }
     console.log('inputParams: ', inputParams);
 
