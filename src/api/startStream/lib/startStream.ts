@@ -5,8 +5,9 @@ import { getStreamStatus, updateStreamStatus } from 'common/services/dynamoDB/st
 import StartStreamInput from '../interfaces/StartStreamInput.interface';
 
 import { invokeProducerLambda } from './invokeProducerLambda';
+import LambdaServices from 'common/interfaces/LambdaServices.interface';
 
-export const startStream = async (params: StartStreamInput, { dynamodb, lambdaClient }) => {
+export const startStream = async (params: StartStreamInput, { dynamodb, lambdaClient }: LambdaServices) => {
   console.log('startStream params: ', params);
 
   const streamItem = await getStreamStatus(dynamodb);

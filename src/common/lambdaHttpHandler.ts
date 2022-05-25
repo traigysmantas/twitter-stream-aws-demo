@@ -3,10 +3,11 @@ import Joi from 'joi';
 
 import HttpLambdaResponse from './interfaces/HttpLambdaResponse.interface';
 import JsonObject from './interfaces/JsonObject.interface';
+import LambdaServices from './interfaces/LambdaServices.interface';
 import { formatSuccessfulResponse, handleError } from './utils/http';
 import { validateInput } from './utils/validation';
 
-const lambdaHttpHandler = async <T>({ queryStringParameters, body }: APIGatewayProxyEvent, fn: (params?: T | null, services?: any) => JsonObject, services?: any, validationSchema?: Joi.ObjectSchema<T>): Promise<HttpLambdaResponse> => {
+const lambdaHttpHandler = async <T>({ queryStringParameters, body }: APIGatewayProxyEvent, fn: (params?: T | null, services?: LambdaServices) => JsonObject, services?: LambdaServices, validationSchema?: Joi.ObjectSchema<T>): Promise<HttpLambdaResponse> => {
   try {
     const inputParams = {
       ...(queryStringParameters && { ...queryStringParameters }),

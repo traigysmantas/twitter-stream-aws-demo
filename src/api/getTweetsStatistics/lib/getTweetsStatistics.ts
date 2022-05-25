@@ -1,7 +1,7 @@
+import LambdaServices from 'common/interfaces/LambdaServices.interface';
 import { LambdaHttpError } from 'common/utils/http';
 
 import { TweetsStatisticsParams } from '../interfaces/TweetsStatisticsParams';
-
 import { getDimensions } from './getDimensions';
 
 const CW_NAMESPACE = process.env.CW_NAMESPACE || 'tweetsFinal';
@@ -9,7 +9,7 @@ const CW_COUNTRY_METRIC = process.env.CW_COUNTRY_METRIC || 'TweetsByCountry';
 
 export const getTweetsStatistics = async (
   { startTime, endTime, countryCode }: TweetsStatisticsParams,
-  { cloudwatch }
+  { cloudwatch }: LambdaServices
 ) => {
   console.log('getTweetsStatistics params: ', {
     startTime,
