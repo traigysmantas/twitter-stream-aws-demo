@@ -2,7 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import lambdaHttpHandler from 'common/lambdaHttpHandler';
 
-import { GetTweetsParams } from './interfaces/GetTweetsParams.interface';
+import GetTweetsParams from './interfaces/GetTweetsParams.interface';
 import { getTweets } from './lib/getTweets';
 import GetTweetsSchema from './schemas/GetTweets.schema';
 
