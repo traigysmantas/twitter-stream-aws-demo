@@ -1,4 +1,5 @@
 import LambdaServices from 'common/interfaces/LambdaServices.interface';
+
 import GetTweetsParams from '../interfaces/GetTweetsParams.interface';
 
 import { getTweetsFromTable } from './dynamoDB/getTweetsFromTable';

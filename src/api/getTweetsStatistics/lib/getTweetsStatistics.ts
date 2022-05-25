@@ -2,6 +2,7 @@ import LambdaServices from 'common/interfaces/LambdaServices.interface';
 import { LambdaHttpError } from 'common/utils/http';
 
 import { TweetsStatisticsParams } from '../interfaces/TweetsStatisticsParams';
+
 import { getDimensions } from './getDimensions';
 
 const CW_NAMESPACE = process.env.CW_NAMESPACE || 'tweetsFinal';
