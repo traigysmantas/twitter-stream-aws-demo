@@ -28,6 +28,12 @@ Parameters:
     Default: /TWITTER_BEARER_TOKEN
 
 Resources:
+  # API Gateway
+  TweetsAPIGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: demo
+
   # SQS 
   StreamCloseQueue:
     Type: AWS::SQS::Queue
@@ -155,6 +161,8 @@ Resources:
           Properties:
             Path: /stream
             Method: post
+            RestApiId: !Ref TweetsAPIGateway
+
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref StreamStatusTable
@@ -180,6 +188,7 @@ Resources:
           Properties:
             Path: /stream
             Method: delete
+            RestApiId: !Ref TweetsAPIGateway
       Policies:
         - SQSSendMessagePolicy:
             QueueName: !GetAtt StreamCloseQueue.QueueName
@@ -205,6 +214,7 @@ Resources:
           Properties:
             Path: /tweets
             Method: get
+            RestApiId: !Ref TweetsAPIGateway
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TweetsTable
@@ -228,6 +238,7 @@ Resources:
           Properties:
             Path: /tweetsStatistics
             Method: get
+            RestApiId: !Ref TweetsAPIGateway
       Environment:
         Variables:
           CW_NAMESPACE: !Ref CloudWatchCustomNS
@@ -246,8 +257,8 @@ Outputs:
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   StreamApi:
-      Description: 'API Gateway endpoint URL for Prod stage for Hello function'
-      Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+      Description: 'API Gateway endpoint URL for twitter demo stage'
+      Value: !Sub 'https://${TweetsAPIGateway}.execute-api.${AWS::Region}.amazonaws.com/demo/'
   StartStreamFunction:
     Description: "Start stream Lambda Function ARN"
     Value: !GetAtt StartStreamFunction.Arn
