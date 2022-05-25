@@ -1,11 +1,11 @@
-import LambdaServices from 'common/interfaces/LambdaServices.interface';
 import { getStreamStatus } from 'common/services/dynamoDB/streams';
+import { dynamodb, sqs } from 'common/services/instances';
 import { isStreamRunning } from 'common/utils';
 import { LambdaHttpError } from 'common/utils/http';
 
 import { sendCloseMessage } from './sendCloseMessage';
 
-export const stopStream = async (_, { dynamodb, sqs }: LambdaServices) => {
+export const stopStream = async () => {
     const streamItem = await getStreamStatus(dynamodb);
 
     if (!isStreamRunning(streamItem)) {

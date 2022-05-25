@@ -1,10 +1,10 @@
-import LambdaServices from 'common/interfaces/LambdaServices.interface';
+import { cloudwatch } from 'common/services/instances';
 import { LambdaHttpError } from 'common/utils/http';
 
 const CW_NAMESPACE = process.env.CW_NAMESPACE || 'tweetsFinal';
 const CW_COUNTRY_METRIC = process.env.CW_COUNTRY_METRIC || 'TweetsByCountry';
 
-export const getAvailableCountries = async (_, { cloudwatch }: LambdaServices) => {
+export const getAvailableCountries = async () => {
 
   const metrics = await cloudwatch
     .listMetrics({

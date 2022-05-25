@@ -6,8 +6,6 @@ import { getTweetsStatistics } from './lib/getTweetsStatistics';
 import { TweetsStatisticsParams } from './interfaces/TweetsStatisticsParams';
 import TweetsStatisticsSchema from './schemas/TweetsStatistics.schema';
 
-const cloudwatch = new AWS.CloudWatch();
-
 export const handler: APIGatewayProxyHandler = async (event) => {
-  return lambdaHttpHandler<TweetsStatisticsParams>(event, getTweetsStatistics, { cloudwatch }, TweetsStatisticsSchema);
+  return lambdaHttpHandler<TweetsStatisticsParams>(event, getTweetsStatistics, TweetsStatisticsSchema);
 };

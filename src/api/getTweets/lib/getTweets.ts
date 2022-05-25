@@ -1,5 +1,4 @@
-import LambdaServices from 'common/interfaces/LambdaServices.interface';
-
+import { dynamodb } from 'common/services/instances';
 import GetTweetsParams from '../interfaces/GetTweetsParams.interface';
 
 import { getTweetsFromTable } from './dynamoDB/getTweetsFromTable';
@@ -8,7 +7,7 @@ import { encodeToBase64 } from './utils';
 const TWEETS_TABLE = process.env.TWEETS_TABLE_NAME;
 const TWEETS_TABLE_INDEX = process.env.TWEETS_TABLE_INDEX;
 
-export const getTweets = async (params: GetTweetsParams, { dynamodb }: LambdaServices) => {
+export const getTweets = async (params: GetTweetsParams) => {
   console.log('[GetTweets] incoming Params: ', params);
 
   const { Items, LastEvaluatedKey } = await getTweetsFromTable(
