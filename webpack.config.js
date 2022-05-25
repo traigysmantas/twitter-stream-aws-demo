@@ -10,6 +10,7 @@ module.exports = {
     GetTweetsStatisticsFn: './src/api/getTweetsStatistics/index.ts'
   },
   devtool: 'source-map',
+  externals: ['aws-sdk'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'webpackBundle/[name]/index.js',
