@@ -1,6 +1,7 @@
+import JsonObject from 'common/interfaces/JsonObject.interface';
 import { LambdaHttpError } from 'common/utils/http';
 
-export const encodeToBase64 = (obj: any) => Buffer.from(JSON.stringify(obj)).toString('base64url');
+export const encodeToBase64 = (obj: JsonObject) => Buffer.from(JSON.stringify(obj)).toString('base64url');
 
 export const parseBase64ToDynamoDbKey = (base64EncodedString: string): AWS.DynamoDB.DocumentClient.Key => {
   try {

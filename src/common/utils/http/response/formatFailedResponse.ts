@@ -1,4 +1,4 @@
-import { HttpLambdaResponse } from 'common/interfaces/HttpLambdaResponse.interface';
+import HttpLambdaResponse from 'common/interfaces/HttpLambdaResponse.interface';
 
 import { LambdaHttpError } from '../error/LambdaHttpError';
 

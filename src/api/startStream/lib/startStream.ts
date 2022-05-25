@@ -2,7 +2,7 @@ import { LambdaHttpError } from 'common/utils/http';
 import { isStreamRunning } from 'common/utils';
 import { getStreamStatus, updateStreamStatus } from 'common/services/dynamoDB/streams';
 
-import { StartStreamInput } from '../interfaces/StartStreamInput.interface';
+import StartStreamInput from '../interfaces/StartStreamInput.interface';
 
 import { invokeProducerLambda } from './invokeProducerLambda';
 

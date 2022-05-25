@@ -1,4 +1,4 @@
-export interface Tweet {
+export default interface Tweet {
   tweetId: string;
   keyword: string;
   createdAt: string;

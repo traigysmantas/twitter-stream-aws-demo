@@ -1,6 +1,4 @@
-import { JsonObject } from './JsonObject.interface';
-
-export interface HttpLambdaResponse {
+export default interface HttpLambdaResponse {
   headers: {
     [key: string]: string;
   };

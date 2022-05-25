@@ -1,4 +1,4 @@
-import { Tweet } from 'common/interfaces/Tweet.inferface';
+import Tweet from 'common/interfaces/Tweet.inferface';
 import { ApiV2Includes, TweetV2SingleStreamResult } from 'twitter-api-v2'
 
 export const transformTweet = (keyword: string, { data, includes }: TweetV2SingleStreamResult): Tweet => {

@@ -1,4 +1,4 @@
-import { Tweet } from 'common/interfaces/Tweet.inferface'
+import Tweet from 'common/interfaces/Tweet.inferface'
 
 export const insertMetrics = (cloudwatch: AWS.CloudWatch, namespace: string, tweet: Tweet) => {
   return cloudwatch.putMetricData({

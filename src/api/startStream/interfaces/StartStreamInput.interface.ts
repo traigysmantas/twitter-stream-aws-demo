@@ -1,4 +1,4 @@
 
-export interface StartStreamInput {
+export default interface StartStreamInput {
   keyword: string;
 }

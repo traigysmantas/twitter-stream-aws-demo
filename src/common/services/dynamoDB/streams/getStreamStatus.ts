@@ -1,4 +1,4 @@
-import { StreamItem } from 'common/interfaces/StreamItem.interface';
+import StreamItem from 'common/interfaces/StreamItem.interface';
 
 export const getStreamStatus = async (dynamodb: AWS.DynamoDB.DocumentClient) => {
   const itemResponse = await dynamodb.get({

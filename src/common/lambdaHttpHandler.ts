@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import Joi from 'joi';
-import { HttpLambdaResponse } from './interfaces/HttpLambdaResponse.interface';
-import { JsonObject } from './interfaces/JsonObject.interface';
 
+import HttpLambdaResponse from './interfaces/HttpLambdaResponse.interface';
+import JsonObject from './interfaces/JsonObject.interface';
 import { formatSuccessfulResponse, handleError } from './utils/http';
 import { validateInput } from './utils/validation';
 

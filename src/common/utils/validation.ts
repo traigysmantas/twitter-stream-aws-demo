@@ -1,4 +1,4 @@
-import { JsonObject } from 'common/interfaces/JsonObject.interface';
+import JsonObject from 'common/interfaces/JsonObject.interface';
 import Joi from 'joi';
 
 import { LambdaHttpError } from './http';

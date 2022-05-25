@@ -1,6 +1,6 @@
 import { SQSHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { Tweet } from 'common/interfaces/Tweet.inferface';
+import Tweet from 'common/interfaces/Tweet.inferface';
 
 import { insertMetrics } from './lib/services/cloudwatch';
 import { insertTweets } from './lib/services/dynamodb';

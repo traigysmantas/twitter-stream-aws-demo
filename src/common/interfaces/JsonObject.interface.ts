@@ -1,3 +1,3 @@
-export interface JsonObject {
+export default interface JsonObject {
   [key: string]: any;
 }

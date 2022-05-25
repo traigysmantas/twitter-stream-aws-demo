@@ -1,8 +1,10 @@
+import HttpLambdaResponse from 'common/interfaces/HttpLambdaResponse.interface';
+
 import { formatFailedResponse } from '../response/formatFailedResponse';
 
 import { LambdaHttpError } from './LambdaHttpError';
 
-export const handleError = (err: LambdaHttpError | Error): any => {
+export const handleError = (err: LambdaHttpError | Error): HttpLambdaResponse => {
   if (err instanceof LambdaHttpError) {
     const { statusCode, message } = err;
     console.error(`[FAILURE][StatusCode: ${statusCode}] message:`, message);
