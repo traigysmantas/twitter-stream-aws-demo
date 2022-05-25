@@ -22,6 +22,9 @@ Parameters:
   CloudWatchCustomNS:
     Type: String
     Default: tweetsFinal
+  CountryMetric:
+    Type: String
+    Default: TweetsByCountry
   TwitterBearerToken:
     Type: AWS::SSM::Parameter::Value<String>
     Description: Twitter Bearer Token value saved in AWS SSM Parameter store
@@ -251,6 +254,29 @@ Resources:
             - cloudwatch:GetMetricData
             - cloudwatch:ListMetrics
             Resource: '*'
+  
+  GetAvailableCountriesFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/webpackBundle/GetAvailableCountriesFn
+      Handler: index.handler
+      MemorySize: 128
+      Timeout: 10
+      Architectures:
+        - x86_64
+      Events:
+        StopStream:
+          Type: Api
+          Properties:
+            Path: /availableCountries
+            Method: get
+            RestApiId: !Ref TweetsAPIGateway
+      Environment:
+        Variables:
+          CW_NAMESPACE: !Ref CloudWatchCustomNS
+          CW_COUNTRY_METRIC: !Ref CountryMetric
+      Policies:
+        - CloudWatchDashboardPolicy: {}
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

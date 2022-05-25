@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { GetTweetsParams } from '../interfaces/GetTweetsParams.interface';
+import GetTweetsParams from '../interfaces/GetTweetsParams.interface';
 
 const GetTweetsSchema: Joi.ObjectSchema<GetTweetsParams> = Joi.object({
   keyword: Joi.string().optional(),

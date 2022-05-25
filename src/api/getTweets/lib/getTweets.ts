@@ -1,4 +1,4 @@
-import { GetTweetsParams } from '../interfaces/GetTweetsParams.interface';
+import GetTweetsParams from '../interfaces/GetTweetsParams.interface';
 
 import { getTweetsFromTable } from './dynamoDB/getTweetsFromTable';
 import { encodeToBase64 } from './utils';
